@@ -1,0 +1,26 @@
+{
+  "name": "plom-model",
+  "version": "0.0.0",
+  "description": "Context, Model and Theta with non blocking I/O",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/plom-io/plom-model.git"
+  },
+  "keywords": [
+    "PLOM.IO"
+  ],
+  "author": "Sebastien Ballesteros",
+  "license": "GPLv3",
+  "gitHead": "439294ffce1cf969cea5637c002ca180ba52349e",
+  "readmeFilename": "README.md",
+  "dependencies": {
+    "clone": "~0.1.7",
+    "async": "~0.2.8",
+    "underscore": "~1.4.4",
+    "csv": "~0.3.0"
+  }
+}
