@@ -1,0 +1,40 @@
+{
+  "name": "oBinomial",
+  "description": "my comment",
+
+  "observed": [
+    {
+      "id": "prev", "comment":"prevalence",
+      "definition": ["I"],
+      "time_series_id": ["city1__CDC__prev"],
+      "observation_id": "common"
+    },
+    {
+      "id": "inc_out", "comment":"incidence (including death) measured at recovery time",
+      "definition": [{"from":"I", "to":"DU"}, {"from":"I", "to":"U"}],
+      "time_series_id": ["all__CDC__inc", "all__google__inc"],
+      "observation_id": "common"
+    },
+    {
+      "id": "inc_in", "comment":"incidence measured at infection time",
+      "definition": [{"from":"S", "to":"I"}],
+      "time_series_id": ["city2__CDC__inc"],
+      "observation_id": "common"
+    }
+  ],
+
+  "observation": [
+    {
+      "id": "common", 
+      "parameter": [
+        {"id": "rep", "comment": "reporting rate"},
+        {"id": "phi",  "comment": "over-dispertion"}
+      ],
+      "model": {
+        "distribution": "discretized_normal",
+        "mean": "rep*prop*x",
+        "var": "rep*(1.0-rep)*prop*x + (rep*phi*prop*x)**2"
+      }
+    }
+  ]
+}
