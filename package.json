@@ -4,7 +4,7 @@
   "description": "Context, Model and Theta with non blocking I/O",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -21,6 +21,7 @@
     "clone": "~0.1.7",
     "async": "~0.2.8",
     "underscore": "~1.4.4",
-    "csv": "~0.3.0"
+    "csv": "~0.3.0",
+    "plom-parser": "*"
   }
 }

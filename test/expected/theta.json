@@ -1,0 +1,309 @@
+{
+  "name": "my_name",
+  "description": "my comment",
+  "partition": {
+    "data_stream": {
+      "group": [
+        {
+          "id": "CDC",
+          "time_series_id": [
+            "all__CDC__inc",
+            "city1__CDC__prev",
+            "city2__CDC__inc"
+          ]
+        },
+        {
+          "id": "google",
+          "time_series_id": [
+            "all__google__inc"
+          ]
+        }
+      ],
+      "comment": "split by data stream"
+    },
+    "variable_population": {
+      "group": [
+        {
+          "id": "city1__all",
+          "population_id": [
+            "city1__all"
+          ]
+        },
+        {
+          "id": "city2__all",
+          "population_id": [
+            "city2__all"
+          ]
+        }
+      ]
+    },
+    "variable_time_series": {
+      "group": [
+        {
+          "id": "all__CDC__inc",
+          "time_series_id": [
+            "all__CDC__inc"
+          ]
+        },
+        {
+          "id": "all__google__inc",
+          "time_series_id": [
+            "all__google__inc"
+          ]
+        },
+        {
+          "id": "city2__CDC__inc",
+          "time_series_id": [
+            "city2__CDC__inc"
+          ]
+        },
+        {
+          "id": "city1__CDC__prev",
+          "time_series_id": [
+            "city1__CDC__prev"
+          ]
+        }
+      ]
+    },
+    "identical_population": {
+      "group": [
+        {
+          "id": "all",
+          "population_id": [
+            "city1__all",
+            "city2__all"
+          ]
+        }
+      ]
+    },
+    "identical_time_series": {
+      "group": [
+        {
+          "id": "all",
+          "time_series_id": [
+            "all__CDC__inc",
+            "all__google__inc",
+            "city2__CDC__inc",
+            "city1__CDC__prev"
+          ]
+        }
+      ]
+    }
+  },
+  "parameter": {
+    "S": {
+      "partition_id": "variable_population",
+      "transformation": "logit",
+      "group": {
+        "city1__all": {
+          "min": {
+            "value": 0.07
+          },
+          "max": {
+            "value": 0.07
+          },
+          "guess": {
+            "value": 0.07
+          },
+          "sd_transf": {
+            "value": 0
+          },
+          "prior": {
+            "value": "uniform"
+          }
+        },
+        "city2__all": {
+          "min": {
+            "value": 0.07
+          },
+          "max": {
+            "value": 0.07
+          },
+          "guess": {
+            "value": 0.07
+          },
+          "sd_transf": {
+            "value": 0
+          },
+          "prior": {
+            "value": "uniform"
+          }
+        }
+      }
+    },
+    "I": {
+      "partition_id": "identical_population",
+      "transformation": "logit",
+      "group": {
+        "all": {
+          "min": {
+            "value": 0.000001
+          },
+          "guess": {
+            "value": 0.00001
+          },
+          "max": {
+            "value": 0.0001
+          },
+          "sd_transf": {
+            "value": 0.01
+          },
+          "prior": {
+            "value": "uniform"
+          }
+        }
+      }
+    },
+    "r0": {
+      "partition_id": "variable_population",
+      "transformation": "log",
+      "group": {
+        "city1__all": {
+          "min": {
+            "value": 15
+          },
+          "guess": {
+            "value": 20
+          },
+          "max": {
+            "value": 35
+          },
+          "sd_transf": {
+            "value": 0.02
+          },
+          "prior": {
+            "value": "uniform"
+          }
+        },
+        "city2__all": {
+          "min": {
+            "value": 15
+          },
+          "guess": {
+            "value": 20
+          },
+          "max": {
+            "value": 35
+          },
+          "sd_transf": {
+            "value": 0.02
+          },
+          "prior": {
+            "value": "uniform"
+          }
+        }
+      }
+    },
+    "v": {
+      "partition_id": "identical_population",
+      "transformation": "log",
+      "unit": "D",
+      "type": "rate_as_duration",
+      "group": {
+        "all": {
+          "min": {
+            "value": 5
+          },
+          "guess": {
+            "value": 11
+          },
+          "max": {
+            "value": 20
+          },
+          "sd_transf": {
+            "value": 0.02
+          },
+          "prior": {
+            "value": "normal"
+          }
+        }
+      }
+    },
+    "sto": {
+      "partition_id": "identical_population",
+      "transformation": "log",
+      "group": {
+        "all": {
+          "min": {
+            "value": 0.1
+          },
+          "guess": {
+            "value": 0.1
+          },
+          "max": {
+            "value": 0.1
+          },
+          "sd_transf": {
+            "value": 0
+          },
+          "prior": {
+            "value": "uniform"
+          }
+        }
+      }
+    },
+    "rep": {
+      "partition_id": "identical_time_series",
+      "transformation": "logit",
+      "group": {
+        "all": {
+          "min": {
+            "value": 0.5
+          },
+          "guess": {
+            "value": 0.6
+          },
+          "max": {
+            "value": 0.8
+          },
+          "sd_transf": {
+            "value": 0.01
+          },
+          "prior": {
+            "value": "uniform"
+          }
+        }
+      }
+    },
+    "phi": {
+      "partition_id": "data_stream",
+      "transformation": "log",
+      "group": {
+        "CDC": {
+          "min": {
+            "value": 0.1
+          },
+          "max": {
+            "value": 0.1
+          },
+          "guess": {
+            "value": 0.1
+          },
+          "sd_transf": {
+            "value": 0
+          },
+          "prior": {
+            "value": "uniform"
+          }
+        },
+        "google": {
+          "min": {
+            "value": 0.1
+          },
+          "max": {
+            "value": 0.1
+          },
+          "guess": {
+            "value": 0.1
+          },
+          "sd_transf": {
+            "value": 0
+          },
+          "prior": {
+            "value": "uniform"
+          }
+        }
+      }
+    }
+  }
+}

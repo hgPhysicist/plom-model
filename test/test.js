@@ -1,13 +1,48 @@
-var Theta = require('..').Theta
-  , fs = require('fs');
+var Context = require('..').Context
+  , Theta = require('..').Theta
+  , clone = require('clone')
+  , fs = require('fs')
+  , assert = require('assert');
 
-var theta = new Theta(require('./context.json'), require('./process.json'), require('./link.json'), require('./model/theta.json'));
 
-//theta.plugBest(fs.createReadStream('./model/best_0.csv'), {index_best:10}, function(err){console.log(err);});
+describe('context', function(){
+
+  var context;
+
+  beforeEach(function(){
+    context = new Context(require('./context.json')); 
+  });
+
+  it('should parse data synchronously', function(){
+    context.parseDataSync();
+    assert.deepEqual(context.context, require('./expected/context.json'));
+  });
+
+  it('should parse data asynchronosly', function(done){
+    context.parseData(function(err){
+      assert.deepEqual(context.context, require('./expected/context.json'));
+      done();
+    });
+  });
+
+});
 
 
-try{
-  theta._set({set: ['r01:all:guess:0.0', 'r0:all2:guess:0.0']});
-}catch(e){
-  console.log(e);
-}
+
+describe('theta', function(){
+
+  var theta;
+
+  beforeEach(function(){
+    theta = new Theta(require('./context.json'), require('./process.json'), require('./link.json'), require('./theta.json')); 
+  });
+
+
+  it('should adapt theta', function(){
+    theta.adapt();
+    assert.deepEqual(theta.theta, require('./expected/theta.json'));
+  });
+
+});
+
+
