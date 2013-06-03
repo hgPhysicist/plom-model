@@ -11,7 +11,7 @@
     },
     {
       "id": "inc_out", "comment":"incidence (including death) measured at recovery time",
-      "definition": [{"from":"I", "to":"DU"}, {"from":"I", "to":"U"}],
+      "definition": [{"from":"I", "to":"R"}, {"from":"I", "to":"U"}],
       "time_series_id": ["all__CDC__inc", "all__google__inc"],
       "observation_id": "common"
     },
