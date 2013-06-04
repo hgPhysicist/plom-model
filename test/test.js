@@ -2,6 +2,7 @@ var Context = require('..').Context
   , Model = require('..').Model
   , path = require('path')
   , Theta = require('..').Theta
+  , parse = require('plom-parser')
   , fs = require('fs')
   , assert = require('assert');
 
@@ -45,30 +46,71 @@ describe('context', function(){
 });
 
 
-describe('model', function(){
+describe('model with remainder', function(){
 
   var model = new Model(require(path.join(root, 'context.json')), require(path.join(root, 'process.json')), require(path.join(root, 'link.json')));
 
-  it('should have par_sv', function(){
+  it('should extract par_sv', function(){
     assert.deepEqual(model.par_sv, ['S', 'I']);
   });
 
-  it('should have par_proc', function(){
+  it('should extract par_proc', function(){
     assert.deepEqual(model.par_proc, ['r0', 'v', 'sto']);
   });
 
-  it('should have par_obs', function(){
+  it('should extract par_obs', function(){
     assert.deepEqual(model.par_obs, ['rep', 'phi']);
   });
 
-  it('should not have pop_size_eq_sum_sv', function(){
+  it('should extract pop_size_eq_sum_sv', function(){
     assert(!model.pop_size_eq_sum_sv);
   })
+
+  it('should get the population size', function(done){
+
+    model.getPopSize([], 3, root, function(err, pop_size_n){           
+      assert.deepEqual(pop_size_n, { date: '2012-08-23', city1__all: 1000001, city2__all: 1000002 });
+      done();
+    });
+  });
+
+  it('should get the population size with n too large', function(done){
+    model.getPopSize([], 3000, root,  function(err, pop_size_n){
+      assert.deepEqual(pop_size_n, { date: '2013-07-25', city1__all: 1000010, city2__all: 1000020 });
+      done();
+    });
+  });
 
 });
 
 
 
+describe('model without remainder', function(){
+
+  var model = new Model(require(path.join(root, 'context.json')), require(path.join(root, 'process_no_remainder.json')), require(path.join(root, 'link.json')));
+
+  it('should extract par_sv', function(){
+    assert.deepEqual(model.par_sv, ['S', 'I', 'R']);
+  });
+
+  it('should extract pop_size_eq_sum_sv', function(){
+    assert(model.pop_size_eq_sum_sv);
+  })
+
+  it('should get the population size', function(done){
+    parse.obj_n(fs.createReadStream(path.join(root, 'results', 'hat_no_remainder_0.csv')), {key:'time', n:3}, function(err, hat_n){
+      if(err) throw err;      
+      assert.equal(hat_n.time, 3);
+      var city1__all = hat_n['S:city1__all'] + hat_n['I:city1__all'] + hat_n['R:city1__all'];
+      var city2__all = hat_n['S:city2__all'] + hat_n['I:city2__all'] + hat_n['R:city2__all'];
+      model.getPopSize(hat_n, 3, root, function(err, pop_size_n){
+        assert.deepEqual(pop_size_n, {city1__all: city1__all, city2__all: city2__all});
+        done();
+      });      
+    });
+  });
+
+});
 
 
 
@@ -135,7 +177,14 @@ describe('theta', function(){
   });
 
 
+  it.skip('should predict', function(done){
 
+    theta.adapt();
+    theta.predict(3, fs.createReadStream(path.join(root, 'results', 'X_0.csv')), fs.createReadStream(path.join(root, 'results', 'best_0.csv')), {}, function(err, thetas){         
+      done();
+    });
+
+  });
 
 });
 
