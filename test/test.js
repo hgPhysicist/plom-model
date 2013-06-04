@@ -48,7 +48,17 @@ describe('context', function(){
 
 describe('model with remainder', function(){
 
-  var model = new Model(require(path.join(root, 'context.json')), require(path.join(root, 'process.json')), require(path.join(root, 'link.json')));
+  var model
+    , pop_size;
+
+  before(function(done){
+    model = new Model(require(path.join(root, 'context.json')), require(path.join(root, 'process.json')), require(path.join(root, 'link.json')));
+    model.load('metadata', 'N', root, function(err, my_pop_size){
+      pop_size = my_pop_size;
+      done();
+    });
+  });
+
 
   it('should extract par_sv', function(){
     assert.deepEqual(model.par_sv, ['S', 'I']);
@@ -66,19 +76,12 @@ describe('model with remainder', function(){
     assert(!model.pop_size_eq_sum_sv);
   })
 
-  it('should get the population size', function(done){
-
-    model.getPopSize([], 3, root, function(err, pop_size_n){           
-      assert.deepEqual(pop_size_n, { date: '2012-08-23', city1__all: 1000001, city2__all: 1000002 });
-      done();
-    });
+  it('should get the population size', function(){   
+    assert.deepEqual(model.getPopSize_n(pop_size, [], 3), { date: '2012-08-23', city1__all: 1000001, city2__all: 1000002 });
   });
 
-  it('should get the population size with n too large', function(done){
-    model.getPopSize([], 3000, root,  function(err, pop_size_n){
-      assert.deepEqual(pop_size_n, { date: '2013-07-25', city1__all: 1000010, city2__all: 1000020 });
-      done();
-    });
+  it('should get the population size with n too large', function(){
+    assert.deepEqual(model.getPopSize_n(pop_size, [], 3000), { date: '2013-07-25', city1__all: 1000010, city2__all: 1000020 });
   });
 
 });
@@ -87,7 +90,16 @@ describe('model with remainder', function(){
 
 describe('model without remainder', function(){
 
-  var model = new Model(require(path.join(root, 'context.json')), require(path.join(root, 'process_no_remainder.json')), require(path.join(root, 'link.json')));
+  var model
+    , pop_size;
+
+  before(function(done){
+    model = new Model(require(path.join(root, 'context.json')), require(path.join(root, 'process_no_remainder.json')), require(path.join(root, 'link.json')));
+    model.load('metadata', 'N', root, function(err, my_pop_size){
+      pop_size = my_pop_size;
+      done();
+    });
+  });
 
   it('should extract par_sv', function(){
     assert.deepEqual(model.par_sv, ['S', 'I', 'R']);
@@ -103,11 +115,10 @@ describe('model without remainder', function(){
       assert.equal(hat_n.time, 3);
       var city1__all = hat_n['S:city1__all'] + hat_n['I:city1__all'] + hat_n['R:city1__all'];
       var city2__all = hat_n['S:city2__all'] + hat_n['I:city2__all'] + hat_n['R:city2__all'];
-      model.getPopSize(hat_n, 3, root, function(err, pop_size_n){
-        assert.deepEqual(pop_size_n, {city1__all: city1__all, city2__all: city2__all});
-        done();
-      });      
-    });
+            
+      assert.deepEqual(model.getPopSize_n(pop_size, hat_n, 3), {city1__all: city1__all, city2__all: city2__all});
+      done();
+    });      
   });
 
 });
