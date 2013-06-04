@@ -77,11 +77,11 @@ describe('model with remainder', function(){
   })
 
   it('should get the population size', function(){   
-    assert.deepEqual(model.getPopSize_n(pop_size, [], 3), { date: '2012-08-23', city1__all: 1000001, city2__all: 1000002 });
+    assert.deepEqual(model._getPopSize_n(pop_size, [], 3), { date: '2012-08-23', city1__all: 1000001, city2__all: 1000002 });
   });
 
   it('should get the population size with n too large', function(){
-    assert.deepEqual(model.getPopSize_n(pop_size, [], 3000), { date: '2013-07-25', city1__all: 1000010, city2__all: 1000020 });
+    assert.deepEqual(model._getPopSize_n(pop_size, [], 3000), { date: '2013-07-25', city1__all: 1000010, city2__all: 1000020 });
   });
 
 });
@@ -116,7 +116,7 @@ describe('model without remainder', function(){
       var city1__all = hat_n['S:city1__all'] + hat_n['I:city1__all'] + hat_n['R:city1__all'];
       var city2__all = hat_n['S:city2__all'] + hat_n['I:city2__all'] + hat_n['R:city2__all'];
             
-      assert.deepEqual(model.getPopSize_n(pop_size, hat_n, 3), {city1__all: city1__all, city2__all: city2__all});
+      assert.deepEqual(model._getPopSize_n(pop_size, hat_n, 3), {city1__all: city1__all, city2__all: city2__all});
       done();
     });      
   });
@@ -134,10 +134,20 @@ describe('theta', function(){
     theta = new Theta(require(path.join(root, 'context.json')), require(path.join(root, 'process.json')), require(path.join(root, 'link.json')), require(path.join(root, 'theta.json'))); 
   });
 
-
   it('should adapt theta', function(){
     theta.adapt();
     assert.deepEqual(theta.theta, require(path.join(root, 'expected', 'theta.json')));
+  });
+
+
+  it('should load the covariance', function(done){
+    theta.adapt();
+    theta.plugCov({covariance: true, root:path.join(root, 'results')}, function(err){
+      if(err) throw err;
+      assert.equal(theta.theta.covariance.length, 10);
+      assert.equal(theta.theta.covariance[0].length, 10);
+      done();
+    });
   });
 
 
@@ -171,7 +181,6 @@ describe('theta', function(){
     });
 
   });
-
 
   it('should be sanitized', function(done){
     theta.adapt();

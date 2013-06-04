@@ -22,6 +22,7 @@
     "async": "~0.2.8",
     "underscore": "~1.4.4",
     "csv": "~0.3.0",
-    "plom-parser": "*"
+    "plom-parser": "*",
+    "plom-reduce": "*"
   }
 }
