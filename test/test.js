@@ -141,7 +141,6 @@ describe('theta', function(){
 
 
   it('should load the covariance', function(done){
-    theta.adapt();
     theta.plugCov({covariance: true, root:path.join(root, 'results')}, function(err){
       if(err) throw err;
       assert.equal(theta.theta.covariance.length, 10);
@@ -154,15 +153,16 @@ describe('theta', function(){
   it('should set theta', function(done){
     theta.adapt();
     theta.mutate({
-      set: ['r0:city1__all:min:6',
-            'r0:city2__all:min:7',
-            'r0:city1__all:guess:16',
-            'r0:city2__all:guess:17',
-            'r0:city1__all:max:46',
-            'r0:city2__all:max:47',
-            'r0:city1__all:sd_transf:0.06',
-            'r0:city2__all:sd_transf:0.07',
-           ]
+      set: [
+        'r0:city1__all:min:6',
+        'r0:city2__all:min:7',
+        'r0:city1__all:guess:16',
+        'r0:city2__all:guess:17',
+        'r0:city1__all:max:46',
+        'r0:city2__all:max:47',
+        'r0:city1__all:sd_transf:0.06',
+        'r0:city2__all:sd_transf:0.07',
+      ]
     }, function(err){
 
       assert.equal(theta.theta.parameter.r0.group.city1__all.min.value, 6);
@@ -182,6 +182,7 @@ describe('theta', function(){
 
   });
 
+
   it('should be sanitized', function(done){
     theta.adapt();
     theta.mutate({
@@ -195,6 +196,9 @@ describe('theta', function(){
     });
 
   });
+
+
+
 
 
   it.skip('should predict', function(done){
