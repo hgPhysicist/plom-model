@@ -149,7 +149,6 @@ describe('theta', function(){
     });
   });
 
-
   it('should set theta', function(done){
     theta.adapt();
     theta.mutate({
@@ -162,8 +161,11 @@ describe('theta', function(){
         'r0:city2__all:max:47',
         'r0:city1__all:sd_transf:0.06',
         'r0:city2__all:sd_transf:0.07',
+        'v:transformation:identity',
+        'v:all:prior:normal',
       ]
     }, function(err){
+      if(err) throw(err);
 
       assert.equal(theta.theta.parameter.r0.group.city1__all.min.value, 6);
       assert.equal(theta.theta.parameter.r0.group.city2__all.min.value, 7);
@@ -177,11 +179,13 @@ describe('theta', function(){
       assert.equal(theta.theta.parameter.r0.group.city1__all.sd_transf.value, 0.06);
       assert.equal(theta.theta.parameter.r0.group.city2__all.sd_transf.value, 0.07);
 
+      assert.equal(theta.theta.parameter.v.transformation, 'identity');
+      assert.equal(theta.theta.parameter.v.group.all.prior.value, 'normal');
+
       done();
     });
 
   });
-
 
   it('should be sanitized', function(done){
     theta.adapt();
