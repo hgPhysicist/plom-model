@@ -14,30 +14,30 @@ describe('context', function(){
   var context;
 
   beforeEach(function(){
-    context = new Context(require(path.join(root, 'context.json'))); 
+    context = new Context(require(path.join(root, 'context.json')), {rootContext:root}); 
   });
 
   it('should parse data synchronously', function(){
-    context.parseDataSync(root);
+    context.parseDataSync();
     assert.deepEqual(context.context, require(path.join(root, 'expected', 'context.json')));
   });
 
   it('should parse data asynchronosly', function(done){
-    context.parseData(root, function(err){
+    context.parseData(function(err){
       assert.deepEqual(context.context, require(path.join(root, 'expected', 'context.json')));
       done();
     });
   });
   
   it('should load data', function(done){
-    context.load('data', 'data', root, function(err, data){
+    context.load('data', 'data', function(err, data){
       assert.deepEqual(data, require(path.join(root, 'expected', 'context.json')).data.filter(function(x){return x.id==='data'})[0].source);
       done();
     });
   });
 
   it('should load metadata', function(done){
-    context.load('metadata', 'mu_b', root, function(err, data){
+    context.load('metadata', 'mu_b', function(err, data){
       assert.deepEqual(data, require(path.join(root, 'expected', 'context.json')).metadata.filter(function(x){return x.id==='mu_b'})[0].source);
       done();
     });
@@ -52,8 +52,8 @@ describe('model with remainder', function(){
     , pop_size;
 
   before(function(done){
-    model = new Model(require(path.join(root, 'context.json')), require(path.join(root, 'process.json')), require(path.join(root, 'link.json')));
-    model.load('metadata', 'N', root, function(err, my_pop_size){
+    model = new Model(require(path.join(root, 'context.json')), require(path.join(root, 'process.json')), require(path.join(root, 'link.json')), {rootContext:root});
+    model.load('metadata', 'N', function(err, my_pop_size){
       pop_size = my_pop_size;
       done();
     });
@@ -94,8 +94,8 @@ describe('model without remainder', function(){
     , pop_size;
 
   before(function(done){
-    model = new Model(require(path.join(root, 'context.json')), require(path.join(root, 'process_no_remainder.json')), require(path.join(root, 'link.json')));
-    model.load('metadata', 'N', root, function(err, my_pop_size){
+    model = new Model(require(path.join(root, 'context.json')), require(path.join(root, 'process_no_remainder.json')), require(path.join(root, 'link.json')), {rootContext:root});
+    model.load('metadata', 'N', function(err, my_pop_size){
       pop_size = my_pop_size;
       done();
     });
@@ -131,7 +131,7 @@ describe('theta', function(){
   var theta;
 
   beforeEach(function(){
-    theta = new Theta(require(path.join(root, 'context.json')), require(path.join(root, 'process.json')), require(path.join(root, 'link.json')), require(path.join(root, 'theta.json'))); 
+    theta = new Theta(require(path.join(root, 'context.json')), require(path.join(root, 'process.json')), require(path.join(root, 'link.json')), require(path.join(root, 'theta.json')), {rootContext:root}); 
   });
 
   it('should adapt theta', function(){
@@ -208,7 +208,7 @@ describe('theta', function(){
   it.skip('should predict', function(done){
 
     theta.adapt();
-    theta.predict(3, fs.createReadStream(path.join(root, 'results', 'X_0.csv')), fs.createReadStream(path.join(root, 'results', 'best_0.csv')), {}, function(err, thetas){         
+    theta.predict(3, fs.createReadStream(path.join(root, 'results', 'X_0.csv')), fs.createReadStream(path.join(root, 'results', 'best_0.csv')), {}, function(err, thetas){
       done();
     });
 
