@@ -205,6 +205,7 @@ describe('theta', function(){
     var n = 3;
     theta.adapt();
     theta.plugHat({root:path.join(root, 'results'), state: 'hat_0.csv', index_state: n}, function(err){
+      if(err) throw err;
       parse.obj_n(fs.createReadStream(path.join(root, 'results', 'hat_0.csv')), {key: 'time', n: n}, function(err, hat){
         theta.load('metadata', 'N', function(err, N){          
           assert.equal(theta.theta.parameter.S.group.city1__all.guess.value, hat['S:city1__all']/N[n+1][1]);
@@ -221,6 +222,7 @@ describe('theta', function(){
     var n = 3;
     theta.adapt();
     theta.plugHat({root:path.join(root, 'results'), state: 'hat_0.csv', index_state: n, ungroup: true}, function(err){
+      if(err) throw err;
       parse.obj_n(fs.createReadStream(path.join(root, 'results', 'hat_0.csv')), {key: 'time', n: n}, function(err, hat){
         theta.load('metadata', 'N', function(err, N){          
           assert.equal(theta.theta.parameter.S.group.city1__all.guess.value, hat['S:city1__all']/N[n+1][1]);
@@ -235,6 +237,40 @@ describe('theta', function(){
   });
 
 
+  it('should rescale', function(done){
+    theta.adapt();
+        
+    var rep = theta.theta.parameter.rep.group.all.guess.value;
+    
+    theta.rescale({root:path.join(root, 'results'), rescale:['rep', 'hat_0.csv']}, function(err){
+      if(err) throw err;
+
+      var hatMean = {
+        all__CDC__inc: 1091.3180,
+        all__google__inc:  1091.3180,
+        city2__CDC__inc: 546.4047,
+        city1__CDC__prev: 857.4636
+      };
+
+      var dataMean = {
+        all__CDC__inc: 1491.3415,
+        all__google__inc: 1240.3111,
+        city2__CDC__inc: 701.7872,
+        city1__CDC__prev: 904.0426
+      };
+            
+      var goodRep = 0.0;
+      for (var ts in hatMean){
+        goodRep += dataMean[ts] / (hatMean[ts]/rep);
+      }
+
+      assert.equal(theta.theta.parameter.rep.group.all.guess.value.toPrecision(4), (goodRep/4).toPrecision(4));
+
+      done();
+    });
+  });
+
+
   it.skip('should predict', function(done){
 
     theta.adapt();
@@ -245,5 +281,4 @@ describe('theta', function(){
   });
 
 });
-
 
