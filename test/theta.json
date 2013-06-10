@@ -25,10 +25,10 @@
       "group": {
         "city1__all": {
           "min": {
-            "value": 0.07
+            "value": 0.0
           },
           "max": {
-            "value": 0.07
+            "value": 0.7
           },
           "guess": {
             "value": 0.07
@@ -39,10 +39,10 @@
         },
         "city2__all": {
           "min": {
-            "value": 0.07
+            "value": 0.0
           },
           "max": {
-            "value": 0.07
+            "value": 0.7
           },
           "guess": {
             "value": 0.07
@@ -59,7 +59,7 @@
       "transformation":"logit",
       "min": 1e-6,
       "guess": 1e-05,
-      "max": 1e-4,
+      "max": 1e-2,
       "sd_transf": 0.01
     },
 
