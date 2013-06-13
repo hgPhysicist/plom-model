@@ -234,7 +234,6 @@ describe('theta', function(){
   });
 
 
-
   it('should plug hat and ungroup', function(done){
     var n = 3;
     theta.adapt();
