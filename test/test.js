@@ -445,6 +445,22 @@ describe('theta', function(){
     });
   });
 
+  it('should plug hat with n === -1', function(done){
+    var n = -1;
+    theta.adapt();
+    theta.plugHat({root:path.join(root, 'results'), state: 'hat_0.csv', index_state: n}, function(err){
+      if(err) throw err;
+      parse.obj_n(fs.createReadStream(path.join(root, 'results', 'hat_0.csv')), {key: 'time', n: n}, function(err, hat){
+        theta.load('metadata', 'N', function(err, N){          
+          assert.equal(theta.theta.parameter.S.group.city1__all.guess.value, hat['S:city1__all']/N[N.length-1][1]);
+          assert.equal(theta.theta.parameter.S.group.city2__all.guess.value, hat['S:city2__all']/N[N.length-1][2]);          
+          assert.equal(theta.theta.parameter.I.group.all.guess.value, (hat['I:city1__all']/N[N.length-1][1] + hat['I:city2__all']/N[N.length-1][2])/2);         
+          done();
+        });
+      });
+    });
+  });
+
 
   it('should plug hat and ungroup', function(done){
     var n = 3;
