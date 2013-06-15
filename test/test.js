@@ -125,234 +125,202 @@ describe('model without remainder', function(){
 
 
 describe('validate',function(){
+  var model;
+
   beforeEach(function(){
     model = new Model(require(path.join(root, 'context.json')), require(path.join(root, 'process.json')), require(path.join(root, 'link.json')), {rootContext:root});
   }),
   
   it('should validate standard model', function(){
-    model.validate();
+    assert.doesNotThrow(function(){
+      model.validate();
+    });
   });
 
   it('should accept numerical values in rates and observation', function(){
-    model.process.model[0].rate = '2*'+model.process.model[0].rate;
-    model.validate();
-    model.process.model[0].rate = '2.0*'+model.process.model[0].rate;
-    model.validate();
-    model.link.observation[0].model.mean = '2*'+model.link.observation[0].model.mean;
-    model.validate();
-    model.link.observation[0].model.mean = '2.0*'+model.link.observation[0].model.mean;
-    model.validate();
-    model.link.observation[0].model.var = '2*'+model.link.observation[0].model.var;
-    model.validate();
-    model.link.observation[0].model.var = '2.0*'+model.link.observation[0].model.var;
-    model.validate();
+    assert.doesNotThrow(function(){
+      model.process.model[0].rate = '2*'+model.process.model[0].rate;
+      model.validate();
+      model.process.model[0].rate = '2.0*'+model.process.model[0].rate;
+      model.validate();
+      model.link.observation[0].model.mean = '2*'+model.link.observation[0].model.mean;
+      model.validate();
+      model.link.observation[0].model.mean = '2.0*'+model.link.observation[0].model.mean;
+      model.validate();
+      model.link.observation[0].model.var = '2*'+model.link.observation[0].model.var;
+      model.validate();
+      model.link.observation[0].model.var = '2.0*'+model.link.observation[0].model.var;
+      model.validate();
+    });
   });
 
   it('should throw error if unknown value is given', function(){
-    model.process.model[0].rate = 'z*'+model.process.model[0].rate;
-        var thrown = false;
-    try {
+    assert.throws(function(){
+      model.process.model[0].rate = 'z*'+model.process.model[0].rate; 
+      model.validate();    
+    });
+
+    assert.throws(function(){
+      model.link.observation[0].model.mean = 'z*' + model.link.observation[0].model.mean;     
       model.validate();
-    } catch (e) {
-      thrown = true;
-    }
-    assert(thrown);
-    model.link.observation[0].model.mean = 'z*' + model.link.observation[0].model.mean;
-        var thrown = false;
-    try {
+    });
+
+    assert.throws(function(){    
+      model.link.observation[0].model.var = 'z*' + model.link.observation[0].model.var;
       model.validate();
-    } catch (e) {
-      thrown = true;
-    }
-    assert(thrown);
-    model.link.observation[0].model.var = 'z*' + model.link.observation[0].model.var;
-    var thrown = false;
-    try {
-      model.validate();
-    } catch (e) {
-      thrown = true;
-    }
-    assert(thrown);
+    });
   });
 
   it('should accept special expressions and functions in rates and observation', function(){
-    model.process.model[0].rate = 'M_PI*'+model.process.model[0].rate;
-    model.validate();
-    model.process.model[0].rate = 'GSL_CONST_MKSA_SPEED_OF_LIGHT*'+model.process.model[0].rate;
-    model.validate();
-    model.process.model[0].rate = 't*'+model.process.model[0].rate;
-    model.validate();
-    model.process.model[0].rate = 'ONE_YEAR*'+model.process.model[0].rate;
-    model.validate();
-    model.process.model[0].rate = 'cos(t)*'+model.process.model[0].rate;
-    model.validate();
-    model.link.observation[0].model.mean = 'M_PI*'+model.link.observation[0].model.mean;
-    model.validate();
-    model.link.observation[0].model.mean = 'GSL_CONST_MKSA_SPEED_OF_LIGHT*'+model.link.observation[0].model.mean;
-    model.validate();
-    model.link.observation[0].model.mean = 't*'+model.link.observation[0].model.mean;
-    model.validate();
-    model.link.observation[0].model.mean = 'ONE_YEAR*'+model.link.observation[0].model.mean;
-    model.validate();
-    model.link.observation[0].model.mean = 'cos(t)*'+model.link.observation[0].model.mean;
-    model.validate(); 
-    model.link.observation[0].model.var = 'M_PI*'+model.link.observation[0].model.var;
-    model.validate();
-    model.link.observation[0].model.var = 'GSL_CONST_MKSA_SPEED_OF_LIGHT*'+model.link.observation[0].model.var;
-    model.validate();
-    model.link.observation[0].model.var = 't*'+model.link.observation[0].model.var;
-    model.validate();
-    model.link.observation[0].model.var = 'ONE_YEAR*'+model.link.observation[0].model.var;
-    model.validate();
-    model.link.observation[0].model.var = 'cos(t)*'+model.link.observation[0].model.var;
-    model.validate();
+    assert.doesNotThrow(function(){
+      model.process.model[0].rate = 'M_PI*'+model.process.model[0].rate;
+      model.validate();
+      model.process.model[0].rate = 'GSL_CONST_MKSA_SPEED_OF_LIGHT*'+model.process.model[0].rate;
+      model.validate();
+      model.process.model[0].rate = 't*'+model.process.model[0].rate;
+      model.validate();
+      model.process.model[0].rate = 'ONE_YEAR*'+model.process.model[0].rate;
+      model.validate();
+      model.process.model[0].rate = 'cos(t)*'+model.process.model[0].rate;
+      model.validate();
+      model.link.observation[0].model.mean = 'M_PI*'+model.link.observation[0].model.mean;
+      model.validate();
+      model.link.observation[0].model.mean = 'GSL_CONST_MKSA_SPEED_OF_LIGHT*'+model.link.observation[0].model.mean;
+      model.validate();
+      model.link.observation[0].model.mean = 't*'+model.link.observation[0].model.mean;
+      model.validate();
+      model.link.observation[0].model.mean = 'ONE_YEAR*'+model.link.observation[0].model.mean;
+      model.validate();
+      model.link.observation[0].model.mean = 'cos(t)*'+model.link.observation[0].model.mean;
+      model.validate(); 
+      model.link.observation[0].model['var'] = 'M_PI*'+model.link.observation[0].model['var'];
+      model.validate();
+      model.link.observation[0].model['var'] = 'GSL_CONST_MKSA_SPEED_OF_LIGHT*'+model.link.observation[0].model['var'];
+      model.validate();
+      model.link.observation[0].model['var'] = 't*'+model.link.observation[0].model['var'];
+      model.validate();
+      model.link.observation[0].model['var'] = 'ONE_YEAR*'+model.link.observation[0].model['var'];
+      model.validate();
+      model.link.observation[0].model['var'] = 'cos(t)*'+model.link.observation[0].model['var'];
+      model.validate();
+    });
   });
 
   it('should throw error when white noise put on non-existing reaction', function(){
-    model.process.white_noise[0].reaction[0].to = 'W';
-    var thrown = false;
-    try {
+    assert.throws(function(){
+      model.process.white_noise[0].reaction[0].to = 'W';
       model.validate();
-    } catch (e) {
-      thrown = true;
-    }
-    assert(thrown);
+    });
 
-    model.process.white_noise[0].reaction[0].to = 'S';
-    model.process.white_noise[0].reaction[0].from = 'I';
-    var thrown = false;
-    try {
+    assert.throws(function(){
+      model.process.white_noise[0].reaction[0].to = 'S';
+      model.process.white_noise[0].reaction[0].from = 'I';
       model.validate();
-    } catch (e) {
-      thrown = true;
-    }
-    assert(thrown);
+    });    
   });
 
   it('should throw error when white noise is specified through "to" and "from" without "rate" when several such reactions exist', function(){
-    model.link.observed[2].definition[0].to = 'I';
-    model.link.observed[2].definition[0].from = 'R';
-    model.process.model[0].from = 'S';
-    model.process.model[0].to = 'I';
-    var thrown = false;
-    try {
+    assert.throws(function(){
+      model.link.observed[2].definition[0].to = 'I';
+      model.link.observed[2].definition[0].from = 'R';
+      model.process.model[0].from = 'S';
+      model.process.model[0].to = 'I';
       model.validate();
-    } catch (e) {
-      thrown = true;
-    }
-    assert(thrown);
+    });
   });
 
-  it('should throw error when incidence of non-existing reaction is observed', function(){
-    model.link.observed[2].definition[0].to = 'W';
-    var thrown = false;
-    try {
-      model.validate();
-    } catch (e) {
-      thrown = true;
-    }
-    assert(thrown);
 
-    model.link.observed[2].definition[0].to = 'S';
-    model.link.observed[2].definition[0].from = 'I';
-    var thrown = false;
-    try {
+  it('should throw error when incidence of non-existing reaction is observed', function(){
+    assert.throws(function(){
+      model.link.observed[2].definition[0].to = 'W';
       model.validate();
-    } catch (e) {
-      thrown = true;
-    }
-    assert(thrown);
+    });
+
+    assert.throws(function(){
+      model.link.observed[2].definition[0].to = 'S';
+      model.link.observed[2].definition[0].from = 'I';
+      model.validate();
+    });
   });
 
   it('should throw error when observed incidence is specified through "to" and "from" without "rate" when several such reactions exist', function(){
-    model.process.white_noise = [];
-    model.process.model[0].from = 'S';
-    model.process.model[0].to = 'I';
-    var thrown = false;
-    try {
+    assert.throws(function(){
+      model.process.white_noise = [];
+      model.process.model[0].from = 'S';
+      model.process.model[0].to = 'I';
       model.validate();
-    } catch (e) {
-      thrown = true;
-    }
-    assert(thrown);
+    });
   });
   
   it('should accept when rate is specified to exclude ambiguity', function(){
-    model.process.model[0].from = 'S';
-    model.process.model[0].to = 'I';
-    model.process.white_noise[0].reaction[0].rate = 'r0/N*v*I';
-    model.link.observed[2].definition[0].rate =  'r0/N*v*I';
-    model.validate();
+    assert.doesNotThrow(function(){
+      model.process.model[0].from = 'S';
+      model.process.model[0].to = 'I';
+      model.process.white_noise[0].reaction[0].rate = 'r0/N*v*I';
+      model.link.observed[2].definition[0].rate =  'r0/N*v*I';
+      model.validate();
+    });
   });
-
-
   
 });
 
 describe('validate model with diffusion', function(){
+  var model;
+
   beforeEach(function(){
     model = new Model(require(path.join(root, 'context.json')), require(path.join(root, 'process_diffusion.json')), require(path.join(root, 'link.json')), {rootContext:root});
   }),
 
   it('should validate standard model', function(){
-    model.validate();
+    assert.doesNotThrow(function(){
+      model.validate();
+    });
   });
 
   it('should reject diffusions that are set on unknown parameters',function(){
-    model.process.diffusion[0].parameter = 'alpha';
-    var thrown = false;
-    try {
+    assert.throws(function(){
+      model.process.diffusion[0].parameter = 'alpha';
       model.validate();
-    } catch (e) {
-      thrown = true;
-    }
-    assert(thrown);
+    });
   });
 
   it('should reject models with non-zero drift',function(){
-    model.process.diffusion[0].drift = '5';
-    var thrown = false;
-    try {
+    assert.throws(function(){
+      model.process.diffusion[0].drift = '5';
       model.validate();
-    } catch (e) {
-      thrown = true;
-    }
-    assert(thrown);
+    });
   });
 
   it('should accept 0 or 0.0 drifts',function(){
-    model.process.diffusion[0].drift = '0';
-    model.validate();
-    model.process.diffusion[0].drift = '0.0';
-    model.validate();
+    assert.doesNotThrow(function(){    
+      model.process.diffusion[0].drift = '0';
+      model.validate();
+      model.process.diffusion[0].drift = '0.0';
+      model.validate();
+    });
   });
 
   it('should reject volatilities other than a single parameter',function(){
-    model.process.diffusion[0].volatility = 'alpha';
-    var thrown = false;
-    try {
+    assert.throws(function(){
+      model.process.diffusion[0].volatility = 'alpha';
       model.validate();
-    } catch (e) {
-      thrown = true;
-    }
-    assert(thrown);
-    model.process.diffusion[0].drift = '3*vol';
-    var thrown = false;
-    try {
+    });
+
+    assert.throws(function(){
+      model.process.diffusion[0].drift = '3*vol';
       model.validate();
-    } catch (e) {
-      thrown = true;
-    }
-    assert(thrown);    model.process.diffusion[0].drift = '3';
-    var thrown = false;
-    try {
+    });
+
+    assert.throws(function(){
+      model.process.diffusion[0].drift = '3';
       model.validate();
-    } catch (e) {
-      thrown = true;
-    }
-    assert(thrown);
+    });
+
   });  
 });
+
+
+
 
 describe('theta', function(){
 
