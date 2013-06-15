@@ -132,9 +132,9 @@ describe('validate',function(){
   }),
   
   it('should validate standard model', function(){
-    assert.doesNotThrow(function(){
-      model.validate();
-    });
+    assert.doesNotThrow(function(){      
+        model.validate();     
+    }, Error);
   });
 
   it('should accept numerical values in rates and observation', function(){
