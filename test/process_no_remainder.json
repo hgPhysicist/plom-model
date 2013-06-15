@@ -4,7 +4,7 @@
 
   "state": [
     {"id": "S", "comment": "Susceptible"},
-    {"id": "I", "comment": "Infectious", "tag": "infectious"},
+    {"id": "I", "comment": "Infectious", "tag": ["infectious"]},
     {"id": "R", "comment": "Recovered"}
   ],
 
@@ -18,7 +18,7 @@
 
   "model": [
     {"from": "U", "to": "S",  "rate": "mu_b*N", "comment":"birth"},
-    {"from": "S", "to": "I", "rate": "r0/N*v*I", "tag": "transmission", "comment":"infection"},
+    {"from": "S", "to": "I", "rate": "r0/N*v*I", "tag": ["transmission"], "comment":"infection"},
     {"from": "I", "to": "R", "rate": "correct_rate(v)", "comment":"recovery"},
     {"from": "S", "to": "U",  "rate": "mu_d", "comment":"death"},
     {"from": "I", "to": "U",  "rate": "mu_d", "comment":"death"},
