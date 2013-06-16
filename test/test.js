@@ -30,14 +30,14 @@ describe('context', function(){
   });
   
   it('should load data', function(done){
-    context.load('data', 'data', function(err, data){
-      assert.deepEqual(data, require(path.join(root, 'expected', 'context.json')).data.filter(function(x){return x.id==='data'})[0].source);
+    context.load('data', function(err, data){
+      assert.deepEqual(data, require(path.join(root, 'expected', 'context.json')).data.source);
       done();
     });
   });
 
   it('should load metadata', function(done){
-    context.load('metadata', 'mu_b', function(err, data){
+    context.load('mu_b', function(err, data){
       assert.deepEqual(data, require(path.join(root, 'expected', 'context.json')).metadata.filter(function(x){return x.id==='mu_b'})[0].source);
       done();
     });
@@ -75,14 +75,6 @@ describe('model with remainder', function(){
   it('should extract pop_size_eq_sum_sv', function(){
     assert(!model.pop_size_eq_sum_sv);
   })
-
-  it('should get the population size', function(){   
-    assert.deepEqual(model._getPopSize_n(pop_size, [], 3), { date: '2012-08-23', city1__all: 1000001, city2__all: 1000002 });
-  });
-
-  it('should get the population size with n too large', function(){
-    assert.deepEqual(model._getPopSize_n(pop_size, [], 3000), { date: '2013-07-25', city1__all: 1000010, city2__all: 1000020 });
-  });
 
 });
 
