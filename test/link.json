@@ -28,7 +28,8 @@
       "id": "common", 
       "parameter": [
         {"id": "rep", "comment": "reporting rate"},
-        {"id": "phi",  "comment": "over-dispertion"}
+        {"id": "phi",  "comment": "over-dispertion"},
+        {"id": "prop",  "comment": "proportion under surveillance"}
       ],
       "model": {
         "distribution": "discretized_normal",
