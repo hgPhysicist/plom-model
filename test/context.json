@@ -58,11 +58,13 @@
     {
       "id": "mu_b",
       "source": "data/mu_b.csv",
+      "unit": "W",
       "comment": "birth rates"
     },
     {
       "id": "mu_d",
       "source": "data/mu_d.csv",
+      "unit": "W",
       "comment": "death rates"
     }
   ]
