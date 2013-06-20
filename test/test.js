@@ -229,6 +229,13 @@ describe('validate',function(){
       model.validate();
     });
   });
+
+  it('should not throw if several properly defined reactions are attributed correlated noise', function(){
+      assert.doesNotThrow(function(){
+      model.process.white_noise[0].reaction.push({'from':'I','to':'R'});
+      model.validate();
+    });
+  });
   
   it('should accept when rate is specified to exclude ambiguity', function(){
     assert.doesNotThrow(function(){
