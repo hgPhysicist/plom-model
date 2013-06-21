@@ -474,5 +474,49 @@ describe('theta', function(){
 
   });
 
+  it('should plug a given line of trace.csv', function(done){
+    var n = 19; 
+    theta.adapt();
+    theta.plugTrace({root:path.join(root, 'results'), trace: true, index_trace: 19}, function(err){
+      if(err) throw err;
+
+      assert.equal(theta.theta.parameter.r0.group.city1__all.guess.value, 20.1101);
+      assert.equal(theta.theta.parameter.r0.group.city2__all.guess.value, 19.7595);
+
+      done();
+      
+    });
+  });
+
+  it('should plug the last line of trace.csv when index_trace = -1', function(done){
+    var n = -1; 
+    theta.adapt();
+    theta.plugTrace({root:path.join(root, 'results'), trace: true, index_trace: -1}, function(err){
+      if(err) throw err;
+
+      assert.equal(theta.theta.parameter.r0.group.city1__all.guess.value, 21.5311);
+      assert.equal(theta.theta.parameter.r0.group.city2__all.guess.value, 30.6102);
+
+      done();
+      
+    });
+  });
+
+  it('should plug a given line of a design.csv', function(done){
+    var n = 2; 
+    theta.adapt();
+    theta.plugTrace({root:path.join(root, 'results'), design: true, index_trace: 2}, function(err){
+      if(err) throw err;
+
+      assert.equal(theta.theta.parameter.r0.group.city1__all.guess.value, 17.33168655885663);
+      assert.equal(theta.theta.parameter.r0.group.city2__all.guess.value, 20.45011236675005);
+
+      done();
+      
+    });
+  });
+
+
+
 });
 
