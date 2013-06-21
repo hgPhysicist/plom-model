@@ -466,7 +466,7 @@ describe('theta', function(){
   it('should predict', function(done){
 
     theta.adapt();
-    theta.predict(21, fs.createReadStream(path.join(root, 'results', 'X_0.csv')), fs.createReadStream(path.join(root, 'results', 'best_0.csv')), {}, function(err, thetas){
+    theta.predict(21, fs.createReadStream(path.join(root, 'results', 'X_0.csv')), fs.createReadStream(path.join(root, 'results', 'trace_0.csv')), {}, function(err, thetas){
       if(err) throw err;
       assert.equal(thetas.length, 100);
       done();
