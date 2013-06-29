@@ -1,6 +1,6 @@
 {
   "name": "plom-model",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Context, Model and Theta with non blocking I/O",
   "main": "index.js",
   "scripts": {
