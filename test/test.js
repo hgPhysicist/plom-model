@@ -107,6 +107,7 @@ describe('validate',function(){
 
   beforeEach(function(){
     model = new Model(require(path.join(root, 'context.json')), require(path.join(root, 'process.json')), require(path.join(root, 'link.json')), {rootContext:root});
+    model.parseDataSync();
   }),
   
   it('should validate standard model', function(){
@@ -254,6 +255,7 @@ describe('validate model with diffusion', function(){
 
   beforeEach(function(){
     model = new Model(require(path.join(root, 'context.json')), require(path.join(root, 'process_diffusion.json')), require(path.join(root, 'link.json')), {rootContext:root});
+    model.parseDataSync();
   }),
 
   it('should validate standard model', function(){
