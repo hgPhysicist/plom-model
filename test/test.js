@@ -325,7 +325,7 @@ describe('theta', function(){
   it('should load the covariance', function(done){
     theta.plugCov({covariance: true, root:path.join(root, 'results')}, function(err){
       if(err) throw err;
-      assert.equal(theta.theta.covariance.length, 10);
+      assert.equal(theta.theta.covariance.length, 11);
       assert.equal(theta.theta.covariance[0].length, 10);
       done();
     });
