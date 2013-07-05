@@ -519,7 +519,7 @@ describe('theta', function(){
   });
 
 
-  it('should renormalize when sum of states is equal to 1.0', function(){
+  it('should renormalize when sum of states is equal to 1.0 and preserve value with sd_transf === 0.0', function(){
     theta.adapt();
     theta.theta.parameter.S.group.city1__all.guess.value = 0.8;
     theta.theta.parameter.S.group.city2__all.guess.value = 0.7;
@@ -527,9 +527,12 @@ describe('theta', function(){
 
     theta._normalize();
 
-    assert(Math.abs(theta.theta.parameter.S.group.city1__all.guess.value + theta.theta.parameter.I.group.all.guess.value - 1/1.01) < 1e-8);    
+    assert(Math.abs(theta.theta.parameter.S.group.city1__all.guess.value + theta.theta.parameter.I.group.all.guess.value - (1-0.01)) < 1e-8);    
+    assert.equal(theta.theta.parameter.S.group.city1__all.guess.value, 0.8);    
+    assert.equal(theta.theta.parameter.S.group.city2__all.guess.value, 0.7);
+    
     //!! I:all was modified by normalizing city1__all
-    assert(Math.abs(theta.theta.parameter.S.group.city2__all.guess.value + theta.theta.parameter.I.group.all.guess.value - (0.7+0.2/1.01)) < 1e-8);
+    assert(Math.abs(theta.theta.parameter.S.group.city2__all.guess.value + theta.theta.parameter.I.group.all.guess.value - (0.7 + (1-0.8-0.01))) < 1e-8);
   });
 
   it('should renormalize when sum of states is greater that 1.0', function(){
@@ -541,10 +544,8 @@ describe('theta', function(){
 
     theta._normalize();
 
-    assert(Math.abs(theta.theta.parameter.S.group.city1__all.guess.value + theta.theta.parameter.I.group.all.guess.value - 1.1/1.11) < 1e-8);        
+    assert(Math.abs(theta.theta.parameter.S.group.city1__all.guess.value + theta.theta.parameter.I.group.all.guess.value - (0.9 + 1*(1-0.9-0.01))) < 1e-8);        
   });
-
-
 
 });
 
