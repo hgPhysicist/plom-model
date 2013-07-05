@@ -222,6 +222,16 @@ describe('validate',function(){
     });
   });
 
+  it('should throw error when incidence related to remainder state is observed', function(){    
+    assert.throws(function(){
+      model.process.model[0].from = 'R';
+      model.process.model[0].to = 'I';
+      model.link.observed[2].definition[0].from = 'R';
+      model.link.observed[2].definition[0].to = 'I'; 
+      model.validate();
+    });
+  });
+
   it('should throw error when observed incidence is specified through "to" and "from" without "rate" when several such reactions exist', function(){
     assert.throws(function(){
       model.process.white_noise = [];
