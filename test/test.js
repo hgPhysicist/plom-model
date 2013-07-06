@@ -531,9 +531,13 @@ describe('theta', function(){
 
   it('should renormalize when sum of states is equal to 1.0 and preserve value with sd_transf === 0.0', function(){
     theta.adapt();
+    
     theta.theta.parameter.S.group.city1__all.guess.value = 0.8;
     theta.theta.parameter.S.group.city2__all.guess.value = 0.7;
+
     theta.theta.parameter.I.group.all.guess.value = 0.2;
+    theta.theta.parameter.I.group.all.min.value = 0.01;
+    theta.theta.parameter.I.group.all.max.value = 0.3;
 
     theta._normalize();
 
@@ -551,11 +555,55 @@ describe('theta', function(){
     theta.theta.parameter.S.group.city1__all.guess.value = 0.9;
     theta.theta.parameter.S.group.city2__all.guess.value = 0.7;
     theta.theta.parameter.I.group.all.guess.value = 0.2;
+    theta.theta.parameter.I.group.all.min.value = 0.01;
+    theta.theta.parameter.I.group.all.max.value = 0.3;
 
     theta._normalize();
 
     assert(Math.abs(theta.theta.parameter.S.group.city1__all.guess.value + theta.theta.parameter.I.group.all.guess.value - (0.9 + 1*(1-0.9-0.01))) < 1e-8);        
   });
+
+  it('should try to renormalize but throw an error as the renormalized value is outside the prior', function(){
+    theta.adapt();
+
+    theta.theta.parameter.S.group.city1__all.guess.value = 0.9;
+    theta.theta.parameter.S.group.city2__all.guess.value = 0.7;
+    theta.theta.parameter.I.group.all.guess.value = 0.2;
+    theta.theta.parameter.I.group.all.min.value = 0.1;
+    theta.theta.parameter.I.group.all.max.value = 0.3;
+
+    assert.throws(function(){
+      theta._normalize();
+    });
+  });
+
+
+  it('should unstick', function(){
+    theta.adapt();
+
+    var parg = theta.theta.parameter.S.group.city1__all;
+    parg.guess.value = parg.max.value;
+    parg.sd_transf.value = 0.1;
+ 
+    theta._unstick({unstick: 0.01});
+
+    assert.equal(parg.guess.value, parg.max.value - 0.01*(parg.max.value - parg.min.value));
+  });
+
+
+  it('should preserve value sith sd_transf === 0.0 while unsticking', function(){
+    theta.adapt();
+
+    var parg = theta.theta.parameter.S.group.city1__all;
+    parg.guess.value = parg.max.value;
+    parg.sd_transf.value = 0.0;
+    
+    theta._unstick({unstick: 0.01});
+
+    assert.equal(parg.guess.value, parg.max.value);
+  });
+
+  
 
 });
 
