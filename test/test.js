@@ -591,7 +591,7 @@ describe('theta', function(){
   });
 
 
-  it('should preserve value sith sd_transf === 0.0 while unsticking', function(){
+  it('should preserve value with sd_transf === 0.0 while unsticking', function(){
     theta.adapt();
 
     var parg = theta.theta.parameter.S.group.city1__all;
