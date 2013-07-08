@@ -62,7 +62,6 @@ describe('model with remainder', function(){
     });
   });
 
-
   it('should extract par_sv', function(){
     assert.deepEqual(model.par_sv, ['S', 'I']);
   });
@@ -75,12 +74,15 @@ describe('model with remainder', function(){
     assert.deepEqual(model.par_obs, ['rep', 'phi']);
   });
 
+  it('should extract whiteNoiseSd', function(){
+    assert.deepEqual(model.whiteNoiseSd, ['sto']);
+  });
+
   it('should extract pop_size_eq_sum_sv', function(){
     assert(!model.pop_size_eq_sum_sv);
   })
 
 });
-
 
 
 describe('model without remainder', function(){
@@ -102,7 +104,7 @@ describe('model without remainder', function(){
 });
 
 
-describe('validate',function(){
+describe('validate model',function(){
   var model;
 
   beforeEach(function(){
@@ -396,6 +398,9 @@ describe('theta', function(){
   it('should plug hat', function(done){
     var n = 21; //21 is the time
     theta.adapt();
+    theta.theta.parameter.S.group.city1__all.sd_transf.value = 0.02;
+    theta.theta.parameter.S.group.city2__all.sd_transf.value = 0.02;
+
     theta.plugHat({root:path.join(root, 'results'), state: 'hat_0.csv', index_state: n}, function(err){
       if(err) throw err;
       parse.obj_n(fs.createReadStream(path.join(root, 'results', 'hat_0.csv')), {key: 'time', n: n}, function(err, hat){
@@ -404,14 +409,26 @@ describe('theta', function(){
         assert.equal(theta.theta.parameter.S.group.city2__all.guess.value, hat['S:city2__all']/ pop['city2__all']);          
         assert.equal(theta.theta.parameter.I.group.all.guess.value, (hat['I:city1__all']/pop['city1__all'] + hat['I:city2__all']/pop['city2__all'])/2);         
         done();
-
       });
+    });
+  });
+
+  it('should plug hat but do not change value with sd_transf 0.0', function(){
+    var n = 21; //21 is the time
+    theta.adapt();    
+    theta.theta.parameter.S.group.city1__all.sd_transf.value = 0.0;
+    var expected = theta.theta.parameter.S.group.city1__all.guess.value;
+    theta.plugHat({root:path.join(root, 'results'), state: 'hat_0.csv', index_state: n}, function(err){      
+      assert.equal(theta.theta.parameter.S.group.city1__all.guess.value, expected);     
     });
   });
 
   it('should plug hat with n === -1', function(done){
     var n = -1;
     theta.adapt();
+    theta.theta.parameter.S.group.city1__all.sd_transf.value = 0.02;
+    theta.theta.parameter.S.group.city2__all.sd_transf.value = 0.02;
+
     theta.plugHat({root:path.join(root, 'results'), state: 'hat_0.csv', index_state: n}, function(err){
       if(err) throw err;
       parse.obj_n(fs.createReadStream(path.join(root, 'results', 'hat_0.csv')), {key: 'time', n: n}, function(err, hat){
@@ -607,3 +624,25 @@ describe('theta', function(){
 
 });
 
+
+describe('theta with diffusion', function(){
+
+  var theta;
+
+  beforeEach(function(){
+    theta = new Theta(require(path.join(root, 'context.json')), require(path.join(root, 'process_diffusion.json')), require(path.join(root, 'link.json')), require(path.join(root, 'theta_diffusion.json')), {rootContext:root}); 
+  });
+
+  it('should plug hat including the diffusion values', function(done){
+    theta.adapt();
+
+    theta.plugHat({root:path.join(root, 'results_diffusion'), state: 'hat_0.csv'}, function(err){
+      if(err) throw err;
+      parse.obj_n(fs.createReadStream(path.join(root, 'results_diffusion', 'hat_0.csv')), {key: 'time'}, function(err, hat){              
+        assert.equal(theta.theta.parameter.r0.group.city1__all.guess.value, hat['diff:r0:city1__all']);
+        assert.equal(theta.theta.parameter.r0.group.city2__all.guess.value, hat['diff:r0:city2__all']);                 
+        done();
+      });
+    });
+  });
+});
