@@ -74,10 +74,6 @@ describe('model with remainder', function(){
     assert.deepEqual(model.par_obs, ['rep', 'phi']);
   });
 
-  it('should extract whiteNoiseSd', function(){
-    assert.deepEqual(model.whiteNoiseSd, ['sto']);
-  });
-
   it('should extract pop_size_eq_sum_sv', function(){
     assert(!model.pop_size_eq_sum_sv);
   })
