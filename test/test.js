@@ -383,8 +383,8 @@ describe('theta', function(){
       set: ['r0:all:max:51', 'r0:all:guess:600']
     }, function(err){
       if(err) throw err;
-      assert.equal(theta.theta.parameter.r0.group.city1__all.guess.value, 51);
-      assert.equal(theta.theta.parameter.r0.group.city2__all.guess.value, 51);
+      assert(theta.theta.parameter.r0.group.city1__all.guess.value <= 51);
+      assert(theta.theta.parameter.r0.group.city2__all.guess.value <= 51);
 
       done();
     });
