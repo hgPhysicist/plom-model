@@ -377,14 +377,14 @@ describe('theta', function(){
 
   });
 
-  it('should be sanitized', function(done){
+  it('should be sanitized and automaticaly unsticked from the boundary', function(done){
     theta.adapt();
     theta.mutate({
       set: ['r0:all:max:51', 'r0:all:guess:600']
     }, function(err){
       if(err) throw err;
-      assert(theta.theta.parameter.r0.group.city1__all.guess.value <= 51);
-      assert(theta.theta.parameter.r0.group.city2__all.guess.value <= 51);
+      assert.equal(theta.theta.parameter.r0.group.city1__all.guess.value, 51-1e-14);
+      assert.equal(theta.theta.parameter.r0.group.city2__all.guess.value, 51-1e-14);
 
       done();
     });
