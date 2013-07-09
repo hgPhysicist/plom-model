@@ -562,6 +562,7 @@ describe('theta', function(){
     assert(Math.abs(theta.theta.parameter.S.group.city2__all.guess.value + theta.theta.parameter.I.group.all.guess.value - (0.7 + (1-0.8-0.01))) < 1e-8);
   });
 
+
   it('should renormalize when sum of states is greater that 1.0', function(){
     theta.adapt();
 
@@ -576,6 +577,7 @@ describe('theta', function(){
     assert(Math.abs(theta.theta.parameter.S.group.city1__all.guess.value + theta.theta.parameter.I.group.all.guess.value - (0.9 + 1*(1-0.9-0.01))) < 1e-8);        
   });
 
+
   it('should try to renormalize but throw an error as the renormalized value is outside the prior', function(){
     theta.adapt();
 
@@ -588,6 +590,46 @@ describe('theta', function(){
     assert.throws(function(){
       theta._normalize();
     });
+  });
+
+
+  it('should check that sumSV < 1.0 for every populations', function(){
+    theta.adapt();
+
+    theta.theta.parameter.S.group.city1__all.guess.value = 0.85;
+    theta.theta.parameter.S.group.city2__all.guess.value = 0.8;
+    theta.theta.parameter.I.group.all.guess.value = 0.1;
+    theta.theta.parameter.I.group.all.min.value = 0.1;
+    theta.theta.parameter.I.group.all.max.value = 0.3;
+
+    assert(theta.checkSumSv());
+
+    theta.theta.parameter.I.group.all.guess.value = 0.2;
+
+    assert(!theta.checkSumSv());    
+  });
+
+  it('should check that sumSV < 1.0 for every populations in case of transformation', function(){
+    theta.adapt();
+
+    theta.theta.parameter.S.group.city1__all.min.value = 0;
+    theta.theta.parameter.S.group.city1__all.max.value = 9;
+    theta.theta.parameter.S.group.city2__all.min.value = 0;
+    theta.theta.parameter.S.group.city2__all.max.value = 9;
+    theta.theta.parameter.I.group.all.min.value = 0;
+    theta.theta.parameter.I.group.all.max.value = 9;
+
+    theta.theta.parameter.S.transformation = 'scale_pow10_neg';
+    theta.theta.parameter.I.transformation = 'scale_pow10_neg';
+    theta.theta.parameter.S.group.city1__all.guess.value = 3;
+    theta.theta.parameter.S.group.city2__all.guess.value = 3;
+    theta.theta.parameter.I.group.all.guess.value = 2;
+
+    assert(theta.checkSumSv());
+
+    theta.theta.parameter.I.group.all.guess.value = 0;
+
+    assert(!theta.checkSumSv());    
   });
 
 
