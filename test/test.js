@@ -573,8 +573,34 @@ describe('theta', function(){
     theta.theta.parameter.I.group.all.max.value = 0.3;
 
     theta._normalize();
-
+    
     assert(Math.abs(theta.theta.parameter.S.group.city1__all.guess.value + theta.theta.parameter.I.group.all.guess.value - (0.9 + 1*(1-0.9-0.01))) < 1e-8);        
+  });
+
+  
+  it('should renormalize when sum of states is greater that 1.0 and return value in the log10 scale', function(){
+    theta.adapt();
+
+    theta.theta.parameter.S.transformation = 'scale_pow10_neg';
+
+    theta.theta.parameter.S.group.city1__all.guess.value = -Math.log(0.9)/Math.LN10;
+    theta.theta.parameter.S.group.city1__all.min.value = 0;
+    theta.theta.parameter.S.group.city1__all.max.value = 9;
+
+    theta.theta.parameter.S.group.city2__all.guess.value = -Math.log(0.7)/Math.LN10;
+    theta.theta.parameter.S.group.city2__all.min.value = 0;
+    theta.theta.parameter.S.group.city2__all.max.value = 9;
+
+    theta.theta.parameter.I.transformation = 'scale_pow10_neg';
+    theta.theta.parameter.I.group.all.guess.value = -Math.log(0.2)/Math.LN10;
+    theta.theta.parameter.I.group.all.min.value = 0;
+    theta.theta.parameter.I.group.all.max.value = 9;
+
+    theta._normalize();
+
+    var expectedI = 1*(1-0.9-0.01);
+
+    assert(Math.abs(theta.theta.parameter.I.group.all.guess.value - (- Math.log(expectedI)/ Math.LN10)) < 1e-8);        
   });
 
 
@@ -657,8 +683,6 @@ describe('theta', function(){
 
     assert.equal(parg.guess.value, parg.max.value);
   });
-
-  
 
 });
 
